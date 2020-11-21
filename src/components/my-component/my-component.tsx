@@ -1,4 +1,4 @@
-import { Component, Prop, h, Fragment } from '@stencil/core';
+import { Component, Prop, h, Fragment, Event, EventEmitter } from '@stencil/core';
 import { format } from '../../utils/utils';
 
 @Component({
@@ -22,8 +22,21 @@ export class MyComponent {
    */
   @Prop() last: string;
 
+  @Event({ eventName: 'respuesta' })
+  respuesta: EventEmitter<string>;
+
   private getText(): string {
     return format(this.first, this.middle, this.last);
+  }
+
+  private generateMessage(e) {
+    console.log(this.respuesta);
+
+    setTimeout(() => {
+      this.respuesta.emit('text');
+    }, 500);
+
+    e.preventDefault();
   }
 
   render() {
@@ -35,7 +48,7 @@ export class MyComponent {
         </div>
         <form class="formTest">
           <input type="text" placeholder="Prueba de inputs" />
-          <button>Enviar formulario</button>
+          <button onClick={this.generateMessage}>Enviar formulario</button>
         </form>
       </Fragment>
     );
